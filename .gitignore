@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+*.local
+
+# Vite
+client/dist/
+client/.vite/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store

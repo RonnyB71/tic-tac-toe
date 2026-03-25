@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  gamesAsX  Game[] @relation("PlayerX")
+  gamesAsO  Game[] @relation("PlayerO")
+  moves     Move[]
+  wins      Game[] @relation("Winner")
+}
+
+model Game {
+  id        String     @id @default(cuid())
+  status    GameStatus @default(IN_PROGRESS)
+  playerX   User       @relation("PlayerX", fields: [playerXId], references: [id])
+  playerXId String
+  playerO   User       @relation("PlayerO", fields: [playerOId], references: [id])
+  playerOId String
+  winner    User?      @relation("Winner", fields: [winnerId], references: [id])
+  winnerId  String?
+  moves     Move[]
+  createdAt DateTime   @default(now())
+  endedAt   DateTime?
+}
+
+model Move {
+  id        String   @id @default(cuid())
+  game      Game     @relation(fields: [gameId], references: [id])
+  gameId    String
+  player    User     @relation(fields: [playerId], references: [id])
+  playerId  String
+  position  Int      // 0-8, row-major order
+  createdAt DateTime @default(now())
+}
+
+enum GameStatus {
+  IN_PROGRESS
+  X_WINS
+  O_WINS
+  DRAW
+  CANCELLED
+}
