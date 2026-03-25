@@ -83,7 +83,7 @@ export async function makeMove(
   position: number,
 ): Promise<{ board: (string | null)[]; turn: string }> {
   const moverBroadcast = waitFor<{ board: (string | null)[]; turn: string }>(mover, 'move:broadcast');
-  const observerBroadcast = waitFor<any>(observer, 'move:broadcast');
+  const observerBroadcast = waitFor<unknown>(observer, 'move:broadcast');
   mover.emit('move:make', { roomId, position });
   const [result] = await Promise.all([moverBroadcast, observerBroadcast]);
   return result;

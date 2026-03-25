@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+import { GameStatus } from '@prisma/client';
 import redis from '../lib/redis';
 import prisma from '../lib/prisma';
 import { isValidMove, applyMove, checkResult } from '../game/logic';
@@ -53,7 +54,7 @@ async function persistGame(session: GameSession, result: string) {
   await prisma.game.update({
     where: { id: session.gameId },
     data: {
-      status: result as any,
+      status: result as GameStatus,
       winnerId: winnerId ?? null,
       endedAt: new Date(),
     },

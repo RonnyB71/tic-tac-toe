@@ -28,7 +28,7 @@ function elapsed(since: string) {
 
 export default function AdminDashboard() {
   const [state, setState] = useState<AdminState>({ queue: [], activeMatches: [] });
-  const [tick, setTick] = useState(0);
+  const [_tick, setTick] = useState(0);
 
   useEffect(() => {
     function joinAdmin() {
