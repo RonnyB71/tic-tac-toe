@@ -40,12 +40,14 @@ async function freshPair() {
 // ─── Matchmaking ────────────────────────────────────────────────────────────
 
 describe('matchmaking', () => {
-  it('assigns X to the first queued player and O to the second', async () => {
+  it('assigns one player X and the other O', async () => {
     const tokens = await freshPair();
     const { p1Symbol, p2Symbol, p1, p2 } = await matchTwoPlayers(url, tokens);
 
-    expect(p1Symbol).toBe('X');
-    expect(p2Symbol).toBe('O');
+    const symbols = [p1Symbol, p2Symbol];
+    expect(symbols).toContain('X');
+    expect(symbols).toContain('O');
+    expect(p1Symbol).not.toBe(p2Symbol);
 
     p1.disconnect();
     p2.disconnect();

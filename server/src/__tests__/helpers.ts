@@ -9,7 +9,7 @@ import { createSocketServer } from '../socket/index';
 export async function startTestServer() {
   const app = createApp();
   const httpServer = http.createServer(app);
-  createSocketServer(httpServer);
+  const io = createSocketServer(httpServer);
 
   await new Promise<void>((resolve) => httpServer.listen(0, resolve));
   const { port } = httpServer.address() as AddressInfo;
@@ -18,7 +18,10 @@ export async function startTestServer() {
   return {
     url,
     api: supertest(app) as Agent,
-    close: () => new Promise<void>((resolve) => httpServer.close(() => resolve())),
+    close: () =>
+      new Promise<void>((resolve) => {
+        io.close(() => httpServer.close(() => resolve()));
+      }),
   };
 }
 
